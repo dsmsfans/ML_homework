@@ -2,20 +2,16 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import random as rd
-import scipy as sc
 sns.set_palette('husl')
-import matplotlib.pyplot as plt
-import heapq as he
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import classification_report
-from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
-from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import FastICA
 from sklearn import cluster
 from sklearn.mixture import GaussianMixture
+from sklearn import preprocessing
+from sklearn import tree
+import graphviz
 
 #--------------------------------------------------ICA-------------------------------------------------
 
@@ -40,7 +36,7 @@ index = np.argsort(ica_sum)[::-1]
 for i in X_train_ica:
     top2.append([i[index[0]],i[index[1]]]) 
     
-X_train = np.array(top2)
+X = np.array(top2)
 
 for i in range(10):  
     array = data.values
@@ -110,4 +106,33 @@ print("class0: ",class0)
 print("class1: ",class1)
 print("class2: ",class2)
 
-#----------------------------------------------
+#----------------------------------------------C4.5 tree
+
+treedata = pd.read_csv('4.csv')
+X = treedata.loc[:,treedata.columns != 'play']
+Y = treedata['play']
+X = pd.get_dummies(X)
+
+LE = preprocessing.LabelEncoder()
+Y = LE.fit_transform(Y.values)
+
+Dtree = tree.DecisionTreeClassifier(criterion = 'entropy')
+Dtree = Dtree.fit(X,Y)
+out = tree.export_graphviz(Dtree, out_file = None)
+graph = graphviz.Source(out)
+graph.render("4_tree")
+#-----------------------------------------------------5
+
+treedata2 = pd.read_csv('5.csv')
+X2 = treedata2.loc[:,treedata2.columns != 'play']
+Y2 = treedata2['play']
+
+X2['outlook'] = LE.fit_transform(X2['outlook'])
+X2['windy'] = LE.fit_transform(X2['windy'])
+Y2 = LE.fit_transform(Y2.values)
+
+Dtree2 = tree.DecisionTreeClassifier(criterion = 'entropy')
+Dtree2 = Dtree2.fit(X2,Y2)
+out2 = tree.export_graphviz(Dtree2, out_file = None)
+graph2 = graphviz.Source(out2)
+graph2.render("5_tree")

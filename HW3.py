@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import random as rd
+import matplotlib.pyplot as plt
 sns.set_palette('husl')
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
@@ -11,7 +12,7 @@ from sklearn import cluster
 from sklearn.mixture import GaussianMixture
 from sklearn import preprocessing
 from sklearn import tree
-import graphviz
+#import graphviz
 
 #--------------------------------------------------ICA-------------------------------------------------
 
@@ -57,20 +58,20 @@ print("accuracy: ",np.mean(total))
 dataset = data.iloc[:,0:4].values
 kmeans = cluster.KMeans(n_clusters = 3).fit_predict(dataset)
 
-#plt.scatter(dataset[kmeans == 0, 0], dataset[kmeans == 0, 1], s = 100, c = 'red', label = 'Iris-setosa')
-#plt.scatter(dataset[kmeans == 1, 0], dataset[kmeans == 1, 1], s = 100, c = 'blue', label = 'Iris-versicolour')
-#plt.scatter(dataset[kmeans == 2, 0], dataset[kmeans == 2, 1], s = 100, c = 'green', label = 'Iris-virginica')
+plt.scatter(dataset[kmeans == 0, 0], dataset[kmeans == 0, 1], s = 100, c = 'red', label = 'Iris-setosa')
+plt.scatter(dataset[kmeans == 1, 0], dataset[kmeans == 1, 1], s = 100, c = 'blue', label = 'Iris-versicolour')
+plt.scatter(dataset[kmeans == 2, 0], dataset[kmeans == 2, 1], s = 100, c = 'green', label = 'Iris-virginica')
 
-#for i in range(150):
-#    if i < 50:
-#        if kmeans[i] != 1:
-#            print(i)
-#    if i >= 50 and i <100:
-#        if kmeans[i] != 0:
-#            print(i)       
-#    if i >= 100:
-#        if kmeans[i] != 2:
-#            print(i)
+for i in range(150):
+    if i < 50:
+        if kmeans[i] != 1:
+            print(i)
+    if i >= 50 and i <100:
+        if kmeans[i] != 0:
+            print(i)       
+    if i >= 100:
+        if kmeans[i] != 2:
+            print(i)
 
 #-----------------------------------------------GMM------------------------------------------------------
 gmm = GaussianMixture(n_components = 3,max_iter = 3000)
@@ -108,31 +109,31 @@ print("class2: ",class2)
 
 #----------------------------------------------C4.5 tree
 
-treedata = pd.read_csv('4.csv')
-X = treedata.loc[:,treedata.columns != 'play']
-Y = treedata['play']
-X = pd.get_dummies(X)
-
-LE = preprocessing.LabelEncoder()
-Y = LE.fit_transform(Y.values)
-
-Dtree = tree.DecisionTreeClassifier(criterion = 'entropy')
-Dtree = Dtree.fit(X,Y)
-out = tree.export_graphviz(Dtree, out_file = None)
-graph = graphviz.Source(out)
-graph.render("4_tree")
-#-----------------------------------------------------5
-
-treedata2 = pd.read_csv('5.csv')
-X2 = treedata2.loc[:,treedata2.columns != 'play']
-Y2 = treedata2['play']
-
-X2['outlook'] = LE.fit_transform(X2['outlook'])
-X2['windy'] = LE.fit_transform(X2['windy'])
-Y2 = LE.fit_transform(Y2.values)
-
-Dtree2 = tree.DecisionTreeClassifier(criterion = 'entropy')
-Dtree2 = Dtree2.fit(X2,Y2)
-out2 = tree.export_graphviz(Dtree2, out_file = None)
-graph2 = graphviz.Source(out2)
-graph2.render("5_tree")
+#treedata = pd.read_csv('4.csv')
+#X = treedata.loc[:,treedata.columns != 'play']
+#Y = treedata['play']
+#X = pd.get_dummies(X)
+#
+#LE = preprocessing.LabelEncoder()
+#Y = LE.fit_transform(Y.values)
+#
+#Dtree = tree.DecisionTreeClassifier(criterion = 'entropy')
+#Dtree = Dtree.fit(X,Y)
+#out = tree.export_graphviz(Dtree, out_file = None)
+#graph = graphviz.Source(out)
+#graph.render("4_tree")
+##-----------------------------------------------------5
+#
+#treedata2 = pd.read_csv('5.csv')
+#X2 = treedata2.loc[:,treedata2.columns != 'play']
+#Y2 = treedata2['play']
+#
+#X2['outlook'] = LE.fit_transform(X2['outlook'])
+#X2['windy'] = LE.fit_transform(X2['windy'])
+#Y2 = LE.fit_transform(Y2.values)
+#
+#Dtree2 = tree.DecisionTreeClassifier(criterion = 'entropy')
+#Dtree2 = Dtree2.fit(X2,Y2)
+#out2 = tree.export_graphviz(Dtree2, out_file = None)
+#graph2 = graphviz.Source(out2)
+#graph2.render("5_tree")
